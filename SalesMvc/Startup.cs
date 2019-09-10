@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesMvc.Models;
+using SalesMvc.Data;
 
 namespace SalesMvc
 {
@@ -38,16 +39,19 @@ namespace SalesMvc
 
             services.AddDbContext<SalesMvcContext>(options =>
                     options.UseMySql(Configuration.GetConnectionString("SalesMvcContext"), builder =>
-builder.MigrationsAssembly("SalesMvc")));
+            builder.MigrationsAssembly("SalesMvc")));
+
+            services.AddScoped<SeedingService>();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedService)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                seedService.seed();
             }
             else
             {

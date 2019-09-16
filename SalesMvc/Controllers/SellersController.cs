@@ -7,6 +7,7 @@ using SalesMvc.Models;
 using SalesMvc.Models.ViewModels;
 using SalesMvc.Services;
 
+
 namespace SalesMvc.Controllers
 {
     public class SellersController : Controller
@@ -42,7 +43,13 @@ namespace SalesMvc.Controllers
 
         public IActionResult Delete (int? id)
         {
-            if ( id == null)
+            return (FindObj(id));
+        }
+
+
+        public IActionResult FindObj (int? id)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
@@ -55,12 +62,20 @@ namespace SalesMvc.Controllers
 
             return View(obj);
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete (int id)
         {
             _sellerService.Remove(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Details (int? id)
+        {
+            return (FindObj(id));
+
         }
     }
 }

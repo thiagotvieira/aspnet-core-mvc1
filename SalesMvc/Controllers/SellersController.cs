@@ -31,7 +31,7 @@ namespace SalesMvc.Controllers
 
         public IActionResult Create()
         {
-            var departments = _departmentService.FindALL();
+            var departments = _departmentService.FindAll();
             var viewModel = new SellerFormViewModel { Departments = departments };
             return View(viewModel);
         }
@@ -39,6 +39,14 @@ namespace SalesMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
         {
+
+            // Call Validation BackEnd if JavaScript disable
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -92,7 +100,7 @@ namespace SalesMvc.Controllers
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not found." });
             }
-            List<Department> departments = _departmentService.FindALL();
+            List<Department> departments = _departmentService.FindAll();
             SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments };
             return View(viewModel);
         }
@@ -100,6 +108,15 @@ namespace SalesMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
+
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
+
+
             if (id != seller.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch." });

@@ -38,13 +38,13 @@ namespace SalesMvc.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int?>("SelllerId");
+                    b.Property<int?>("SellerId");
 
                     b.Property<int>("Status");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SelllerId");
+                    b.HasIndex("SellerId");
 
                     b.ToTable("SalesRecord");
                 });
@@ -60,9 +60,12 @@ namespace SalesMvc.Migrations
 
                     b.Property<int>("DepartmentId");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(60);
 
                     b.HasKey("Id");
 
@@ -73,9 +76,9 @@ namespace SalesMvc.Migrations
 
             modelBuilder.Entity("SalesMvc.Models.SalesRecord", b =>
                 {
-                    b.HasOne("SalesMvc.Models.Seller", "Selller")
+                    b.HasOne("SalesMvc.Models.Seller", "Seller")
                         .WithMany("Sales")
-                        .HasForeignKey("SelllerId");
+                        .HasForeignKey("SellerId");
                 });
 
             modelBuilder.Entity("SalesMvc.Models.Seller", b =>
